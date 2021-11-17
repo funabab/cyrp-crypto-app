@@ -1,0 +1,2141 @@
+[gd_scene load_steps=70 format=2]
+
+[ext_resource path="res://scenes/header.tscn" type="PackedScene" id=1]
+[ext_resource path="res://fonts/Montserrat/Montserrat-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://images/icon-dashboard.svg" type="Texture" id=3]
+[ext_resource path="res://images/icon-news.svg" type="Texture" id=4]
+[ext_resource path="res://images/icon-settings.svg" type="Texture" id=5]
+[ext_resource path="res://images/icon-chart.svg" type="Texture" id=6]
+[ext_resource path="res://images/icon_wallet.svg" type="Texture" id=7]
+[ext_resource path="res://images/icon-asset.svg" type="Texture" id=8]
+[ext_resource path="res://images/icon-logout.svg" type="Texture" id=9]
+[ext_resource path="res://fonts/Montserrat/Montserrat-SemiBold.ttf" type="DynamicFontData" id=11]
+[ext_resource path="res://scripts/nav_button.gd" type="Script" id=12]
+[ext_resource path="res://images/icon-settings-small.svg" type="Texture" id=13]
+[ext_resource path="res://images/icon-help.svg" type="Texture" id=14]
+[ext_resource path="res://images/icon_bitcoin.svg" type="Texture" id=15]
+[ext_resource path="res://images/icon-graph-btc.svg" type="Texture" id=16]
+[ext_resource path="res://images/icon-graph-eth.svg" type="Texture" id=17]
+[ext_resource path="res://images/icon_eth.svg" type="Texture" id=18]
+[ext_resource path="res://images/icon_ltc.svg" type="Texture" id=19]
+[ext_resource path="res://images/icon-graph-doge.svg" type="Texture" id=20]
+[ext_resource path="res://images/icon_doge.svg" type="Texture" id=21]
+[ext_resource path="res://images/icon-graph-ltc.svg" type="Texture" id=22]
+[ext_resource path="res://images/icon_bnb.svg" type="Texture" id=23]
+[ext_resource path="res://images/icon-graph-bnb.svg" type="Texture" id=24]
+[ext_resource path="res://scripts/graph.gd" type="Script" id=25]
+
+[sub_resource type="DynamicFont" id=1]
+size = 25
+font_data = ExtResource( 2 )
+
+[sub_resource type="StyleBoxEmpty" id=34]
+
+[sub_resource type="StyleBoxEmpty" id=35]
+
+[sub_resource type="ButtonGroup" id=2]
+
+[sub_resource type="DynamicFont" id=3]
+size = 22
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 22
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 24
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 50
+font_data = ExtResource( 11 )
+
+[sub_resource type="Gradient" id=38]
+colors = PoolColorArray( 0.337255, 0.8, 0.94902, 0.14902, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=37]
+gradient = SubResource( 38 )
+
+[sub_resource type="GDScript" id=39]
+resource_name = "gesture"
+script/source = "extends Control
+
+export(Color) var _outlineColor := Color.white
+export(float) var _outlineWidth := 2.0
+
+onready var _tooltip := $tooltip
+onready var _tooltipLabel := $tooltip/label
+
+func _input(event):
+	update()
+	pass
+
+func _draw():
+	var pos := get_local_mouse_position()
+	var rect := get_rect()
+	var graph := get_parent()
+
+	if !rect.has_point(pos):
+		_tooltip.visible = false
+		return
+
+	draw_line(
+		Vector2(pos.x, 0),
+		Vector2(pos.x, rect_size.y),
+		_outlineColor,
+		_outlineWidth,
+		true
+	)
+
+	var size = len(graph._values)
+	var xSize = rect.size.x / size
+	var cur = max(0, floor(pos.x / xSize) - 1)
+	var cVal = graph._values[cur]
+	var nVal = graph._values[cur + 1]
+
+	var gPos = get_global_mouse_position()
+	_tooltipLabel.text = \"$\" + \"%.2f\" % lerp(cVal, nVal, (pos.x - (cur * xSize)) / xSize)
+	_tooltip.rect_position = gPos - Vector2(0, _tooltip.rect_size.y)
+	_tooltip.visible = true
+
+	pass
+"
+
+[sub_resource type="StyleBoxFlat" id=40]
+bg_color = Color( 0.0745098, 0.121569, 0.192157, 1 )
+
+[sub_resource type="DynamicFont" id=47]
+size = 26
+font_data = ExtResource( 11 )
+
+[sub_resource type="DynamicFontData" id=8]
+font_path = "res://fonts/Montserrat/Montserrat-Regular.ttf"
+
+[sub_resource type="DynamicFont" id=7]
+size = 22
+font_data = SubResource( 8 )
+
+[sub_resource type="DynamicFont" id=9]
+size = 50
+font_data = ExtResource( 11 )
+
+[sub_resource type="DynamicFont" id=21]
+size = 24
+font_data = ExtResource( 2 )
+
+[sub_resource type="StyleBoxEmpty" id=22]
+
+[sub_resource type="StyleBoxEmpty" id=24]
+
+[sub_resource type="DynamicFont" id=23]
+size = 20
+font_data = ExtResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=25]
+bg_color = Color( 0.0745098, 0.121569, 0.192157, 1 )
+
+[sub_resource type="StyleBoxEmpty" id=26]
+
+[sub_resource type="ButtonGroup" id=31]
+
+[sub_resource type="DynamicFont" id=27]
+size = 20
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=28]
+size = 18
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=30]
+size = 18
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=29]
+size = 24
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=10]
+size = 30
+font_data = ExtResource( 11 )
+
+[sub_resource type="StyleBoxFlat" id=11]
+bg_color = Color( 0.0745098, 0.121569, 0.192157, 1 )
+
+[sub_resource type="StyleBoxEmpty" id=41]
+
+[sub_resource type="ButtonGroup" id=13]
+
+[sub_resource type="StyleBoxEmpty" id=42]
+
+[sub_resource type="StyleBoxEmpty" id=43]
+
+[sub_resource type="StyleBoxEmpty" id=44]
+
+[sub_resource type="StyleBoxEmpty" id=45]
+
+[sub_resource type="StyleBoxEmpty" id=46]
+
+[sub_resource type="DynamicFont" id=14]
+size = 20
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=15]
+size = 24
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=16]
+size = 22
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=17]
+size = 22
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=18]
+size = 22
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=19]
+size = 22
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=20]
+size = 22
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=32]
+size = 20
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=33]
+size = 20
+font_data = ExtResource( 2 )
+
+[node name="main" type="ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.0588235, 0.101961, 0.145098, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="margin" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 50.0
+margin_top = 50.0
+margin_right = -50.0
+margin_bottom = -50.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="row" type="VBoxContainer" parent="margin"]
+margin_right = 1340.0
+margin_bottom = 1340.0
+custom_constants/separation = 60
+
+[node name="column" parent="margin/row" instance=ExtResource( 1 )]
+
+[node name="column2" type="HBoxContainer" parent="margin/row"]
+margin_top = 130.0
+margin_right = 1340.0
+margin_bottom = 1340.0
+rect_min_size = Vector2( 205, 0 )
+size_flags_vertical = 3
+
+[node name="row" type="VBoxContainer" parent="margin/row/column2"]
+margin_right = 310.0
+margin_bottom = 1210.0
+rect_min_size = Vector2( 310, 0 )
+custom_constants/separation = 40
+
+[node name="button" type="Button" parent="margin/row/column2/row"]
+margin_right = 310.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 60, 80 )
+custom_fonts/font = SubResource( 1 )
+custom_styles/pressed = SubResource( 34 )
+custom_styles/normal = SubResource( 35 )
+toggle_mode = true
+pressed = true
+group = SubResource( 2 )
+text = "Dashboard"
+icon = ExtResource( 3 )
+script = ExtResource( 12 )
+_normalColor = Color( 0.94902, 0.94902, 0.94902, 0.8 )
+_pressedColor = Color( 0.32549, 0.72549, 0.917647, 1 )
+
+[node name="button2" type="Button" parent="margin/row/column2/row"]
+margin_top = 120.0
+margin_right = 310.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 60, 80 )
+custom_fonts/font = SubResource( 1 )
+custom_styles/pressed = SubResource( 34 )
+custom_styles/normal = SubResource( 35 )
+toggle_mode = true
+group = SubResource( 2 )
+text = "Chart"
+icon = ExtResource( 6 )
+script = ExtResource( 12 )
+_normalColor = Color( 0.94902, 0.94902, 0.94902, 0.8 )
+_pressedColor = Color( 0.32549, 0.72549, 0.917647, 1 )
+
+[node name="button3" type="Button" parent="margin/row/column2/row"]
+margin_top = 240.0
+margin_right = 310.0
+margin_bottom = 320.0
+rect_min_size = Vector2( 60, 80 )
+custom_fonts/font = SubResource( 1 )
+custom_styles/pressed = SubResource( 34 )
+custom_styles/normal = SubResource( 35 )
+toggle_mode = true
+group = SubResource( 2 )
+text = "Wallet"
+icon = ExtResource( 7 )
+script = ExtResource( 12 )
+_normalColor = Color( 0.94902, 0.94902, 0.94902, 0.8 )
+_pressedColor = Color( 0.32549, 0.72549, 0.917647, 1 )
+
+[node name="button4" type="Button" parent="margin/row/column2/row"]
+margin_top = 360.0
+margin_right = 310.0
+margin_bottom = 440.0
+rect_min_size = Vector2( 60, 80 )
+custom_fonts/font = SubResource( 1 )
+custom_styles/pressed = SubResource( 34 )
+custom_styles/normal = SubResource( 35 )
+toggle_mode = true
+group = SubResource( 2 )
+text = "News"
+icon = ExtResource( 4 )
+script = ExtResource( 12 )
+_normalColor = Color( 0.94902, 0.94902, 0.94902, 0.8 )
+_pressedColor = Color( 0.32549, 0.72549, 0.917647, 1 )
+
+[node name="button5" type="Button" parent="margin/row/column2/row"]
+margin_top = 480.0
+margin_right = 310.0
+margin_bottom = 560.0
+rect_min_size = Vector2( 60, 80 )
+custom_fonts/font = SubResource( 1 )
+custom_styles/pressed = SubResource( 34 )
+custom_styles/normal = SubResource( 35 )
+toggle_mode = true
+group = SubResource( 2 )
+text = "Settings"
+icon = ExtResource( 5 )
+script = ExtResource( 12 )
+_normalColor = Color( 0.94902, 0.94902, 0.94902, 0.8 )
+_pressedColor = Color( 0.32549, 0.72549, 0.917647, 1 )
+
+[node name="container" type="Control" parent="margin/row/column2/row"]
+margin_top = 600.0
+margin_right = 310.0
+margin_bottom = 1210.0
+size_flags_vertical = 3
+
+[node name="button5" type="Button" parent="margin/row/column2/row/container"]
+anchor_top = 0.85
+anchor_right = 1.0
+anchor_bottom = 0.85
+margin_top = -44.0
+rect_min_size = Vector2( 60, 80 )
+custom_colors/font_color_pressed = Color( 0.32549, 0.72549, 0.917647, 1 )
+custom_fonts/font = SubResource( 1 )
+text = "Logout"
+icon = ExtResource( 9 )
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="row2" type="VBoxContainer" parent="margin/row/column2"]
+margin_left = 314.0
+margin_right = 1340.0
+margin_bottom = 1210.0
+size_flags_horizontal = 3
+custom_constants/separation = 20
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2"]
+margin_right = 1026.0
+margin_bottom = 793.0
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+custom_constants/separation = 20
+
+[node name="ColorRect" type="ColorRect" parent="margin/row/column2/row2/column"]
+margin_right = 670.0
+margin_bottom = 793.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+color = Color( 0.0627451, 0.0980392, 0.133333, 1 )
+
+[node name="margin" type="MarginContainer" parent="margin/row/column2/row2/column/ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 50.0
+margin_top = 50.0
+margin_right = -50.0
+margin_bottom = -50.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="row" type="VBoxContainer" parent="margin/row/column2/row2/column/ColorRect/margin"]
+margin_right = 714.0
+margin_bottom = 693.0
+custom_constants/separation = 20
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect/margin/row"]
+margin_right = 714.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 0, 60 )
+
+[node name="Control" type="Control" parent="margin/row/column2/row2/column/ColorRect/margin/row/column"]
+margin_right = 60.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 60, 60 )
+
+[node name="icon" type="TextureRect" parent="margin/row/column2/row2/column/ColorRect/margin/row/column/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 8 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/column"]
+margin_left = 64.0
+margin_top = 16.0
+margin_right = 537.0
+margin_bottom = 44.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 3 )
+text = "USDT / BTC"
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect/margin/row/column"]
+margin_left = 541.0
+margin_right = 714.0
+margin_bottom = 60.0
+custom_constants/separation = 20
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/column/column"]
+margin_top = 16.0
+margin_right = 26.0
+margin_bottom = 44.0
+custom_fonts/font = SubResource( 4 )
+text = "1H"
+
+[node name="Label2" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/column/column"]
+margin_left = 46.0
+margin_top = 16.0
+margin_right = 72.0
+margin_bottom = 44.0
+custom_colors/font_color = Color( 0.0588235, 0.647059, 0.921569, 1 )
+custom_fonts/font = SubResource( 4 )
+text = "1D"
+
+[node name="Label3" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/column/column"]
+margin_left = 92.0
+margin_top = 16.0
+margin_right = 124.0
+margin_bottom = 44.0
+custom_fonts/font = SubResource( 4 )
+text = "1W"
+
+[node name="Label4" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/column/column"]
+margin_left = 144.0
+margin_top = 16.0
+margin_right = 173.0
+margin_bottom = 44.0
+custom_fonts/font = SubResource( 4 )
+text = "1M"
+
+[node name="container" type="Control" parent="margin/row/column2/row2/column/ColorRect/margin/row"]
+margin_top = 80.0
+margin_right = 714.0
+margin_bottom = 140.0
+rect_min_size = Vector2( 0, 60 )
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect/margin/row/container"]
+anchor_bottom = 1.0
+margin_left = 70.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/container/column"]
+margin_right = 15.0
+margin_bottom = 62.0
+rect_pivot_offset = Vector2( -110, 107 )
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 5 )
+text = "$"
+
+[node name="Label2" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/container/column"]
+margin_left = 19.0
+margin_right = 263.0
+margin_bottom = 62.0
+custom_fonts/font = SubResource( 6 )
+text = "64490.00"
+
+[node name="Label3" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/container/column"]
+margin_left = 267.0
+margin_right = 343.0
+margin_bottom = 62.0
+rect_pivot_offset = Vector2( -110, 107 )
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.129412, 0.588235, 0.32549, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "+12.5%"
+valign = 2
+
+[node name="graph" type="Control" parent="margin/row/column2/row2/column/ColorRect/margin/row"]
+margin_top = 160.0
+margin_right = 714.0
+margin_bottom = 579.0
+size_flags_vertical = 3
+script = ExtResource( 25 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+_texture = SubResource( 37 )
+_outlineColor = Color( 0.2, 0.611765, 0.996078, 1 )
+values = [ 0.113, 48.114, 53.341, 51.915, 48.114, 9.618, 36.708, 27.203, 118.926, 115.599, 118.926, 94.688, 201.144, 152.668, 200.193, 183.084, 215.876, 144.589, 265.302, 235.837, 264.827 ]
+_tension = 0.4
+
+[node name="gesture" type="Control" parent="margin/row/column2/row2/column/ColorRect/margin/row/graph"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = SubResource( 39 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+_outlineColor = Color( 1, 1, 1, 0.6 )
+
+[node name="tooltip" type="PopupPanel" parent="margin/row/column2/row2/column/ColorRect/margin/row/graph/gesture"]
+margin_right = 180.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 180, 60 )
+custom_styles/panel = SubResource( 40 )
+popup_exclusive = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="label" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/graph/gesture/tooltip"]
+margin_right = 180.0
+margin_bottom = 60.0
+custom_fonts/font = SubResource( 47 )
+text = "$40000"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect/margin/row"]
+margin_top = 599.0
+margin_right = 714.0
+margin_bottom = 693.0
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="margin/row/column2/row2/column/ColorRect/margin/row/HBoxContainer"]
+margin_right = 124.0
+margin_bottom = 94.0
+size_flags_horizontal = 3
+
+[node name="title" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/HBoxContainer/VBoxContainer"]
+margin_right = 124.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.8 )
+custom_fonts/font = SubResource( 7 )
+text = "Market cap"
+
+[node name="title2" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/HBoxContainer/VBoxContainer"]
+margin_top = 32.0
+margin_right = 124.0
+margin_bottom = 94.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 9 )
+text = "$1.2T"
+
+[node name="VSeparator" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect/margin/row/HBoxContainer"]
+modulate = Color( 0.94902, 0.94902, 0.94902, 0.501961 )
+margin_left = 128.0
+margin_right = 138.0
+margin_bottom = 94.0
+rect_min_size = Vector2( 10, 40 )
+size_flags_horizontal = 3
+custom_constants/separation = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="margin/row/column2/row2/column/ColorRect/margin/row/HBoxContainer"]
+margin_left = 142.0
+margin_right = 314.0
+margin_bottom = 94.0
+size_flags_horizontal = 3
+
+[node name="title" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/HBoxContainer/VBoxContainer2"]
+margin_right = 172.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.8 )
+custom_fonts/font = SubResource( 7 )
+text = "Volume(24h)"
+
+[node name="title2" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/HBoxContainer/VBoxContainer2"]
+margin_top = 32.0
+margin_right = 172.0
+margin_bottom = 94.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 9 )
+text = "$28.5B"
+
+[node name="VSeparator2" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect/margin/row/HBoxContainer"]
+modulate = Color( 0.94902, 0.94902, 0.94902, 0.501961 )
+margin_left = 318.0
+margin_right = 328.0
+margin_bottom = 94.0
+rect_min_size = Vector2( 10, 40 )
+size_flags_horizontal = 3
+custom_constants/separation = 1
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="margin/row/column2/row2/column/ColorRect/margin/row/HBoxContainer"]
+margin_left = 332.0
+margin_right = 504.0
+margin_bottom = 94.0
+size_flags_horizontal = 3
+
+[node name="title" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/HBoxContainer/VBoxContainer3"]
+margin_right = 172.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.8 )
+custom_fonts/font = SubResource( 7 )
+text = "Supply"
+
+[node name="title2" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/HBoxContainer/VBoxContainer3"]
+margin_top = 32.0
+margin_right = 172.0
+margin_bottom = 94.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 9 )
+text = "$18.5M"
+
+[node name="VSeparator3" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect/margin/row/HBoxContainer"]
+modulate = Color( 0.94902, 0.94902, 0.94902, 0.501961 )
+margin_left = 508.0
+margin_right = 518.0
+margin_bottom = 94.0
+rect_min_size = Vector2( 10, 40 )
+size_flags_horizontal = 3
+custom_constants/separation = 1
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="margin/row/column2/row2/column/ColorRect/margin/row/HBoxContainer"]
+margin_left = 522.0
+margin_right = 714.0
+margin_bottom = 94.0
+size_flags_horizontal = 3
+
+[node name="title" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/HBoxContainer/VBoxContainer4"]
+margin_right = 192.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.8 )
+custom_fonts/font = SubResource( 7 )
+text = "Typical Hold"
+
+[node name="title2" type="Label" parent="margin/row/column2/row2/column/ColorRect/margin/row/HBoxContainer/VBoxContainer4"]
+margin_top = 32.0
+margin_right = 192.0
+margin_bottom = 94.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 9 )
+text = "75 days"
+
+[node name="ColorRect2" type="ColorRect" parent="margin/row/column2/row2/column"]
+margin_left = 690.0
+margin_right = 1026.0
+margin_bottom = 793.0
+size_flags_horizontal = 3
+color = Color( 0.0627451, 0.0980392, 0.133333, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="row" type="VBoxContainer" parent="margin/row/column2/row2/column/ColorRect2"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/separation = 10
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row"]
+margin_right = 457.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 0, 100 )
+custom_constants/separation = 20
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/column"]
+margin_right = 200.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 200, 0 )
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 21 )
+text = "Watchlist"
+align = 1
+valign = 1
+
+[node name="Label2" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/column"]
+margin_left = 220.0
+margin_right = 281.0
+margin_bottom = 100.0
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 21 )
+text = "Limit"
+valign = 1
+
+[node name="VSeparator" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/column"]
+margin_left = 301.0
+margin_right = 305.0
+margin_bottom = 100.0
+size_flags_horizontal = 3
+custom_styles/separator = SubResource( 22 )
+
+[node name="TextureRect" type="TextureRect" parent="margin/row/column2/row2/column/ColorRect2/row/column"]
+margin_left = 325.0
+margin_right = 361.0
+margin_bottom = 100.0
+texture = ExtResource( 14 )
+stretch_mode = 6
+
+[node name="TextureRect2" type="TextureRect" parent="margin/row/column2/row2/column/ColorRect2/row/column"]
+margin_left = 381.0
+margin_right = 417.0
+margin_bottom = 100.0
+texture = ExtResource( 13 )
+stretch_mode = 6
+
+[node name="VSeparator2" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/column"]
+margin_left = 437.0
+margin_right = 457.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/separator = SubResource( 22 )
+
+[node name="column2" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row"]
+margin_top = 110.0
+margin_right = 457.0
+margin_bottom = 136.0
+
+[node name="VSeparator" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/column2"]
+margin_right = 30.0
+margin_bottom = 26.0
+rect_min_size = Vector2( 30, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/column2"]
+margin_left = 34.0
+margin_right = 211.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 23 )
+text = "Name :"
+
+[node name="Label2" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/column2"]
+margin_left = 215.0
+margin_right = 393.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 23 )
+text = "Price"
+align = 2
+
+[node name="VSeparator2" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/column2"]
+margin_left = 397.0
+margin_right = 457.0
+margin_bottom = 26.0
+rect_min_size = Vector2( 60, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="scroll" type="ScrollContainer" parent="margin/row/column2/row2/column/ColorRect2/row"]
+margin_top = 146.0
+margin_right = 457.0
+margin_bottom = 793.0
+size_flags_vertical = 3
+
+[node name="row" type="VBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll"]
+margin_right = 457.0
+margin_bottom = 616.0
+size_flags_horizontal = 3
+
+[node name="button" type="Button" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row"]
+margin_right = 457.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 0, 120 )
+size_flags_horizontal = 3
+custom_styles/pressed = SubResource( 25 )
+custom_styles/normal = SubResource( 26 )
+toggle_mode = true
+pressed = true
+group = SubResource( 31 )
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="seperator" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button/column"]
+margin_right = 20.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="icon" type="TextureRect" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button/column"]
+margin_left = 24.0
+margin_right = 88.0
+margin_bottom = 120.0
+texture = ExtResource( 15 )
+stretch_mode = 6
+
+[node name="seperator2" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button/column"]
+margin_left = 92.0
+margin_right = 112.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="row" type="VBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button/column"]
+margin_left = 116.0
+margin_right = 274.0
+margin_bottom = 120.0
+size_flags_horizontal = 3
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button/column/row"]
+margin_right = 158.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+custom_constants/separation = 10
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button/column/row/column"]
+margin_right = 40.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 27 )
+text = "BTC"
+valign = 2
+
+[node name="Label2" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button/column/row/column"]
+margin_left = 50.0
+margin_right = 114.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 28 )
+text = "Bitcoin"
+valign = 2
+
+[node name="column2" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button/column/row"]
+margin_top = 62.0
+margin_right = 158.0
+margin_bottom = 120.0
+size_flags_vertical = 3
+
+[node name="graph" type="TextureRect" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button/column/row/column2"]
+margin_right = 56.0
+margin_bottom = 58.0
+texture = ExtResource( 16 )
+stretch_mode = 3
+
+[node name="label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button/column/row/column2"]
+margin_left = 60.0
+margin_top = 17.0
+margin_right = 116.0
+margin_bottom = 40.0
+custom_colors/font_color = Color( 0.129412, 0.588235, 0.32549, 1 )
+custom_fonts/font = SubResource( 30 )
+text = "+12.5%"
+align = 1
+valign = 1
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button/column"]
+margin_left = 278.0
+margin_right = 393.0
+margin_bottom = 120.0
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.94902, 0.431373, 0.6, 1 )
+custom_fonts/font = SubResource( 29 )
+text = "64490.00"
+valign = 1
+
+[node name="seperator3" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button/column"]
+margin_left = 397.0
+margin_right = 457.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 60, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="button2" type="Button" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row"]
+margin_top = 124.0
+margin_right = 457.0
+margin_bottom = 244.0
+rect_min_size = Vector2( 0, 120 )
+size_flags_horizontal = 3
+custom_styles/pressed = SubResource( 25 )
+custom_styles/normal = SubResource( 26 )
+toggle_mode = true
+group = SubResource( 31 )
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button2"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="seperator" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button2/column"]
+margin_right = 20.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="icon" type="TextureRect" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button2/column"]
+margin_left = 24.0
+margin_right = 88.0
+margin_bottom = 120.0
+texture = ExtResource( 18 )
+stretch_mode = 6
+
+[node name="seperator2" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button2/column"]
+margin_left = 92.0
+margin_right = 112.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="row" type="VBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button2/column"]
+margin_left = 116.0
+margin_right = 295.0
+margin_bottom = 120.0
+size_flags_horizontal = 3
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button2/column/row"]
+margin_right = 179.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+custom_constants/separation = 10
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button2/column/row/column"]
+margin_right = 40.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 27 )
+text = "ETH"
+valign = 2
+
+[node name="Label2" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button2/column/row/column"]
+margin_left = 50.0
+margin_right = 141.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 28 )
+text = "Ethereum"
+valign = 2
+
+[node name="column2" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button2/column/row"]
+margin_top = 62.0
+margin_right = 179.0
+margin_bottom = 120.0
+size_flags_vertical = 3
+
+[node name="graph" type="TextureRect" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button2/column/row/column2"]
+margin_right = 56.0
+margin_bottom = 58.0
+texture = ExtResource( 17 )
+stretch_mode = 3
+
+[node name="label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button2/column/row/column2"]
+margin_left = 60.0
+margin_top = 17.0
+margin_right = 117.0
+margin_bottom = 40.0
+custom_colors/font_color = Color( 0.129412, 0.588235, 0.32549, 1 )
+custom_fonts/font = SubResource( 30 )
+text = "+15.7%"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button2/column"]
+margin_left = 299.0
+margin_right = 393.0
+margin_bottom = 120.0
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.152941, 0.682353, 0.376471, 1 )
+custom_fonts/font = SubResource( 29 )
+text = "4580.55"
+valign = 1
+
+[node name="seperator3" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button2/column"]
+margin_left = 397.0
+margin_right = 457.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 60, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="button3" type="Button" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row"]
+margin_top = 248.0
+margin_right = 457.0
+margin_bottom = 368.0
+rect_min_size = Vector2( 0, 120 )
+size_flags_horizontal = 3
+custom_styles/pressed = SubResource( 25 )
+custom_styles/normal = SubResource( 26 )
+toggle_mode = true
+group = SubResource( 31 )
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button3"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="seperator" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button3/column"]
+margin_right = 20.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="icon" type="TextureRect" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button3/column"]
+margin_left = 24.0
+margin_right = 88.0
+margin_bottom = 120.0
+texture = ExtResource( 21 )
+stretch_mode = 6
+
+[node name="seperator2" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button3/column"]
+margin_left = 92.0
+margin_right = 112.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="row" type="VBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button3/column"]
+margin_left = 116.0
+margin_right = 310.0
+margin_bottom = 120.0
+size_flags_horizontal = 3
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button3/column/row"]
+margin_right = 194.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+custom_constants/separation = 10
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button3/column/row/column"]
+margin_right = 49.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 27 )
+text = "DOG"
+valign = 2
+
+[node name="Label2" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button3/column/row/column"]
+margin_left = 59.0
+margin_right = 108.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 28 )
+text = "Doge"
+valign = 2
+
+[node name="column2" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button3/column/row"]
+margin_top = 62.0
+margin_right = 194.0
+margin_bottom = 120.0
+size_flags_vertical = 3
+
+[node name="graph" type="TextureRect" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button3/column/row/column2"]
+margin_right = 59.0
+margin_bottom = 58.0
+texture = ExtResource( 20 )
+stretch_mode = 3
+
+[node name="label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button3/column/row/column2"]
+margin_left = 63.0
+margin_top = 17.0
+margin_right = 119.0
+margin_bottom = 40.0
+custom_colors/font_color = Color( 0.890196, 0.313726, 0.478431, 1 )
+custom_fonts/font = SubResource( 30 )
+text = "-5.23%"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button3/column"]
+margin_left = 314.0
+margin_right = 393.0
+margin_bottom = 120.0
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.94902, 0.431373, 0.6, 1 )
+custom_fonts/font = SubResource( 29 )
+text = "0.2599"
+valign = 1
+
+[node name="seperator3" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button3/column"]
+margin_left = 397.0
+margin_right = 457.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 60, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="button4" type="Button" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row"]
+margin_top = 372.0
+margin_right = 457.0
+margin_bottom = 492.0
+rect_min_size = Vector2( 0, 120 )
+size_flags_horizontal = 3
+custom_styles/pressed = SubResource( 25 )
+custom_styles/normal = SubResource( 26 )
+toggle_mode = true
+group = SubResource( 31 )
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button4"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="seperator" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button4/column"]
+margin_right = 20.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="icon" type="TextureRect" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button4/column"]
+margin_left = 24.0
+margin_right = 88.0
+margin_bottom = 120.0
+texture = ExtResource( 19 )
+stretch_mode = 6
+
+[node name="seperator2" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button4/column"]
+margin_left = 92.0
+margin_right = 112.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="row" type="VBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button4/column"]
+margin_left = 116.0
+margin_right = 312.0
+margin_bottom = 120.0
+size_flags_horizontal = 3
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button4/column/row"]
+margin_right = 196.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+custom_constants/separation = 10
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button4/column/row/column"]
+margin_right = 37.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 27 )
+text = "LTC"
+valign = 2
+
+[node name="Label2" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button4/column/row/column"]
+margin_left = 47.0
+margin_right = 119.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 28 )
+text = "Litecoin"
+valign = 2
+
+[node name="column2" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button4/column/row"]
+margin_top = 62.0
+margin_right = 196.0
+margin_bottom = 120.0
+size_flags_vertical = 3
+
+[node name="graph" type="TextureRect" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button4/column/row/column2"]
+margin_right = 56.0
+margin_bottom = 58.0
+texture = ExtResource( 22 )
+stretch_mode = 3
+
+[node name="label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button4/column/row/column2"]
+margin_left = 60.0
+margin_top = 17.0
+margin_right = 118.0
+margin_bottom = 40.0
+custom_colors/font_color = Color( 0.129412, 0.588235, 0.32549, 1 )
+custom_fonts/font = SubResource( 30 )
+text = "+17.7%"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button4/column"]
+margin_left = 316.0
+margin_right = 393.0
+margin_bottom = 120.0
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.152941, 0.682353, 0.376471, 1 )
+custom_fonts/font = SubResource( 29 )
+text = "274.77"
+valign = 1
+
+[node name="seperator3" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button4/column"]
+margin_left = 397.0
+margin_right = 457.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 60, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="button5" type="Button" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row"]
+margin_top = 496.0
+margin_right = 457.0
+margin_bottom = 616.0
+rect_min_size = Vector2( 0, 120 )
+size_flags_horizontal = 3
+custom_styles/pressed = SubResource( 25 )
+custom_styles/normal = SubResource( 26 )
+toggle_mode = true
+group = SubResource( 31 )
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button5"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="seperator" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button5/column"]
+margin_right = 20.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="icon" type="TextureRect" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button5/column"]
+margin_left = 24.0
+margin_right = 88.0
+margin_bottom = 120.0
+texture = ExtResource( 23 )
+stretch_mode = 6
+
+[node name="seperator2" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button5/column"]
+margin_left = 92.0
+margin_right = 112.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 20, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="row" type="VBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button5/column"]
+margin_left = 116.0
+margin_right = 316.0
+margin_bottom = 120.0
+size_flags_horizontal = 3
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button5/column/row"]
+margin_right = 200.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+custom_constants/separation = 10
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button5/column/row/column"]
+margin_right = 46.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 27 )
+text = "BNB"
+valign = 2
+
+[node name="Label2" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button5/column/row/column"]
+margin_left = 56.0
+margin_right = 131.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 28 )
+text = "Binance"
+valign = 2
+
+[node name="column2" type="HBoxContainer" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button5/column/row"]
+margin_top = 62.0
+margin_right = 200.0
+margin_bottom = 120.0
+size_flags_vertical = 3
+
+[node name="graph" type="TextureRect" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button5/column/row/column2"]
+margin_right = 56.0
+margin_bottom = 58.0
+texture = ExtResource( 24 )
+stretch_mode = 3
+
+[node name="label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button5/column/row/column2"]
+margin_left = 60.0
+margin_top = 17.0
+margin_right = 117.0
+margin_bottom = 40.0
+custom_colors/font_color = Color( 0.129412, 0.588235, 0.32549, 1 )
+custom_fonts/font = SubResource( 30 )
+text = "+15.7%"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button5/column"]
+margin_left = 320.0
+margin_right = 393.0
+margin_bottom = 120.0
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.152941, 0.682353, 0.376471, 1 )
+custom_fonts/font = SubResource( 29 )
+text = "651.20"
+valign = 1
+
+[node name="seperator3" type="VSeparator" parent="margin/row/column2/row2/column/ColorRect2/row/scroll/row/button5/column"]
+margin_left = 397.0
+margin_right = 457.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 60, 0 )
+custom_styles/separator = SubResource( 24 )
+
+[node name="column2" type="HBoxContainer" parent="margin/row/column2/row2"]
+margin_top = 813.0
+margin_right = 1026.0
+margin_bottom = 1210.0
+size_flags_vertical = 3
+custom_constants/separation = 20
+
+[node name="color" type="ColorRect" parent="margin/row/column2/row2/column2"]
+margin_right = 670.0
+margin_bottom = 397.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+color = Color( 0.0627451, 0.0980392, 0.133333, 1 )
+
+[node name="margin" type="MarginContainer" parent="margin/row/column2/row2/column2/color"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 50.0
+margin_top = 10.0
+margin_right = -50.0
+margin_bottom = -10.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="row" type="VBoxContainer" parent="margin/row/column2/row2/column2/color/margin"]
+margin_right = 1220.0
+margin_bottom = 377.0
+custom_constants/separation = 20
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column2/color/margin/row"]
+margin_right = 1220.0
+margin_bottom = 60.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column2/color/margin/row/column"]
+margin_right = 200.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="container" type="CenterContainer" parent="margin/row/column2/row2/column2/color/margin/row/column/column"]
+margin_right = 200.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="margin/row/column2/row2/column2/color/margin/row/column/column/container"]
+margin_right = 200.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 200, 60 )
+custom_fonts/font = SubResource( 10 )
+custom_styles/pressed = SubResource( 11 )
+custom_styles/normal = SubResource( 41 )
+toggle_mode = true
+pressed = true
+group = SubResource( 13 )
+text = "Fiat(All)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="column2" type="HBoxContainer" parent="margin/row/column2/row2/column2/color/margin/row/column"]
+margin_left = 204.0
+margin_right = 404.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="container" type="CenterContainer" parent="margin/row/column2/row2/column2/color/margin/row/column/column2"]
+margin_right = 200.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="margin/row/column2/row2/column2/color/margin/row/column/column2/container"]
+margin_right = 200.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 200, 60 )
+custom_fonts/font = SubResource( 10 )
+custom_styles/pressed = SubResource( 11 )
+custom_styles/normal = SubResource( 42 )
+toggle_mode = true
+group = SubResource( 13 )
+text = "BTC"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="column3" type="HBoxContainer" parent="margin/row/column2/row2/column2/color/margin/row/column"]
+margin_left = 408.0
+margin_right = 608.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="container" type="CenterContainer" parent="margin/row/column2/row2/column2/color/margin/row/column/column3"]
+margin_right = 200.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="margin/row/column2/row2/column2/color/margin/row/column/column3/container"]
+margin_right = 200.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 200, 60 )
+custom_fonts/font = SubResource( 10 )
+custom_styles/pressed = SubResource( 11 )
+custom_styles/normal = SubResource( 43 )
+toggle_mode = true
+group = SubResource( 13 )
+text = "USDT"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="column4" type="HBoxContainer" parent="margin/row/column2/row2/column2/color/margin/row/column"]
+margin_left = 612.0
+margin_right = 812.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="container" type="CenterContainer" parent="margin/row/column2/row2/column2/color/margin/row/column/column4"]
+margin_right = 200.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="margin/row/column2/row2/column2/color/margin/row/column/column4/container"]
+margin_right = 200.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 200, 60 )
+custom_fonts/font = SubResource( 10 )
+custom_styles/pressed = SubResource( 11 )
+custom_styles/normal = SubResource( 44 )
+toggle_mode = true
+group = SubResource( 13 )
+text = "BNB"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="column5" type="HBoxContainer" parent="margin/row/column2/row2/column2/color/margin/row/column"]
+margin_left = 816.0
+margin_right = 1016.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="container" type="CenterContainer" parent="margin/row/column2/row2/column2/color/margin/row/column/column5"]
+margin_right = 200.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="margin/row/column2/row2/column2/color/margin/row/column/column5/container"]
+margin_right = 200.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 200, 60 )
+custom_fonts/font = SubResource( 10 )
+custom_styles/pressed = SubResource( 11 )
+custom_styles/normal = SubResource( 45 )
+toggle_mode = true
+group = SubResource( 13 )
+text = "ALTS"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="column6" type="HBoxContainer" parent="margin/row/column2/row2/column2/color/margin/row/column"]
+margin_left = 1020.0
+margin_right = 1220.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="container" type="CenterContainer" parent="margin/row/column2/row2/column2/color/margin/row/column/column6"]
+margin_right = 200.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="margin/row/column2/row2/column2/color/margin/row/column/column6/container"]
+margin_right = 200.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 200, 60 )
+custom_fonts/font = SubResource( 10 )
+custom_styles/pressed = SubResource( 11 )
+custom_styles/normal = SubResource( 46 )
+toggle_mode = true
+group = SubResource( 13 )
+text = "BUSD"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="column2" type="HBoxContainer" parent="margin/row/column2/row2/column2/color/margin/row"]
+margin_top = 80.0
+margin_right = 1220.0
+margin_bottom = 106.0
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/column2"]
+margin_right = 200.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 14 )
+text = "Name:"
+
+[node name="Label2" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/column2"]
+margin_left = 204.0
+margin_right = 404.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 14 )
+text = "Price"
+
+[node name="Label3" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/column2"]
+margin_left = 408.0
+margin_right = 608.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 14 )
+text = "24h Change"
+
+[node name="Label4" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/column2"]
+margin_left = 612.0
+margin_right = 812.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 14 )
+text = "24h High / Low"
+
+[node name="Label5" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/column2"]
+margin_left = 816.0
+margin_right = 1016.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 14 )
+text = "24h Volume"
+
+[node name="Label6" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/column2"]
+margin_left = 1020.0
+margin_right = 1220.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 14 )
+text = "Market Cap"
+
+[node name="scroll" type="ScrollContainer" parent="margin/row/column2/row2/column2/color/margin/row"]
+margin_top = 126.0
+margin_right = 1220.0
+margin_bottom = 377.0
+size_flags_vertical = 3
+
+[node name="row" type="VBoxContainer" parent="margin/row/column2/row2/column2/color/margin/row/scroll"]
+margin_right = 1220.0
+margin_bottom = 235.0
+size_flags_horizontal = 3
+custom_constants/separation = 20
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row"]
+margin_right = 1220.0
+margin_bottom = 31.0
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column"]
+margin_right = 200.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 15 )
+text = "ETH / EUR"
+
+[node name="Label2" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column"]
+margin_left = 204.0
+margin_right = 404.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 16 )
+text = "4,120,03"
+valign = 2
+
+[node name="Label3" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column"]
+margin_left = 408.0
+margin_right = 608.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.152941, 0.682353, 0.376471, 1 )
+custom_fonts/font = SubResource( 17 )
+text = "+15.5%"
+valign = 2
+
+[node name="Label4" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column"]
+margin_left = 612.0
+margin_right = 812.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 18 )
+text = "4,142.49 / 3,969.75"
+valign = 2
+
+[node name="Label5" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column"]
+margin_left = 816.0
+margin_right = 1016.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 19 )
+text = "145.97M"
+valign = 2
+
+[node name="Label6" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column"]
+margin_left = 1020.0
+margin_right = 1220.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 20 )
+text = "$558,019.44M"
+valign = 2
+
+[node name="column2" type="HBoxContainer" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row"]
+margin_top = 51.0
+margin_right = 1220.0
+margin_bottom = 82.0
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column2"]
+margin_right = 200.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 15 )
+text = "BTC / EUR"
+
+[node name="Label2" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column2"]
+margin_left = 204.0
+margin_right = 404.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 16 )
+text = "57,638.76"
+valign = 2
+
+[node name="Label3" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column2"]
+margin_left = 408.0
+margin_right = 608.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.152941, 0.682353, 0.376471, 1 )
+custom_fonts/font = SubResource( 17 )
+text = "+12.5%"
+valign = 2
+
+[node name="Label4" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column2"]
+margin_left = 612.0
+margin_right = 812.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 18 )
+text = "4,142.49 / 3,969.75"
+valign = 2
+
+[node name="Label5" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column2"]
+margin_left = 816.0
+margin_right = 1016.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 19 )
+text = "145.97M"
+valign = 2
+
+[node name="Label6" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column2"]
+margin_left = 1020.0
+margin_right = 1220.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 20 )
+text = "$558,019.44M"
+valign = 2
+
+[node name="column3" type="HBoxContainer" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row"]
+margin_top = 102.0
+margin_right = 1220.0
+margin_bottom = 133.0
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column3"]
+margin_right = 200.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 15 )
+text = "BTC / USDC"
+
+[node name="Label2" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column3"]
+margin_left = 204.0
+margin_right = 404.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 16 )
+text = "4,120,03"
+valign = 2
+
+[node name="Label3" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column3"]
+margin_left = 408.0
+margin_right = 608.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.152941, 0.682353, 0.376471, 1 )
+custom_fonts/font = SubResource( 17 )
+text = "+12.5%"
+valign = 2
+
+[node name="Label4" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column3"]
+margin_left = 612.0
+margin_right = 812.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 18 )
+text = "4,142.49 / 3,969.75"
+valign = 2
+
+[node name="Label5" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column3"]
+margin_left = 816.0
+margin_right = 1016.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 19 )
+text = "145.97M"
+valign = 2
+
+[node name="Label6" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column3"]
+margin_left = 1020.0
+margin_right = 1220.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 20 )
+text = "$558,019.44M"
+valign = 2
+
+[node name="column4" type="HBoxContainer" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row"]
+margin_top = 153.0
+margin_right = 1220.0
+margin_bottom = 184.0
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column4"]
+margin_right = 200.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 15 )
+text = "SHIB / TRY"
+
+[node name="Label2" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column4"]
+margin_left = 204.0
+margin_right = 404.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 16 )
+text = "4,120,03"
+valign = 2
+
+[node name="Label3" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column4"]
+margin_left = 408.0
+margin_right = 608.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.94902, 0.431373, 0.6, 1 )
+custom_fonts/font = SubResource( 17 )
+text = "-4.5%"
+valign = 2
+
+[node name="Label4" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column4"]
+margin_left = 612.0
+margin_right = 812.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 18 )
+text = "4,142.49 / 3,969.75"
+valign = 2
+
+[node name="Label5" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column4"]
+margin_left = 816.0
+margin_right = 1016.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 19 )
+text = "145.97M"
+valign = 2
+
+[node name="Label6" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column4"]
+margin_left = 1020.0
+margin_right = 1220.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 20 )
+text = "$558,019.44M"
+valign = 2
+
+[node name="column5" type="HBoxContainer" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row"]
+margin_top = 204.0
+margin_right = 1220.0
+margin_bottom = 235.0
+
+[node name="Label" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column5"]
+margin_right = 200.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 15 )
+text = "USDT / TRY"
+
+[node name="Label2" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column5"]
+margin_left = 204.0
+margin_right = 404.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 16 )
+text = "4,120,03"
+valign = 2
+
+[node name="Label3" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column5"]
+margin_left = 408.0
+margin_right = 608.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_colors/font_color = Color( 0.94902, 0.431373, 0.6, 1 )
+custom_fonts/font = SubResource( 17 )
+text = "-0.4%"
+valign = 2
+
+[node name="Label4" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column5"]
+margin_left = 612.0
+margin_right = 812.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 18 )
+text = "4,142.49 / 3,969.75"
+valign = 2
+
+[node name="Label5" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column5"]
+margin_left = 816.0
+margin_right = 1016.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 19 )
+text = "145.97M"
+valign = 2
+
+[node name="Label6" type="Label" parent="margin/row/column2/row2/column2/color/margin/row/scroll/row/column5"]
+margin_left = 1020.0
+margin_right = 1220.0
+margin_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 20 )
+text = "$558,019.44M"
+valign = 2
+
+[node name="color2" type="ColorRect" parent="margin/row/column2/row2/column2"]
+margin_left = 690.0
+margin_right = 1026.0
+margin_bottom = 397.0
+size_flags_horizontal = 3
+color = Color( 0.0627451, 0.0980392, 0.133333, 1 )
+
+[node name="margin" type="MarginContainer" parent="margin/row/column2/row2/column2/color2"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 40.0
+margin_top = 40.0
+margin_right = -120.0
+margin_bottom = -20.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="column" type="VBoxContainer" parent="margin/row/column2/row2/column2/color2/margin"]
+margin_right = 176.0
+margin_bottom = 337.0
+custom_constants/separation = 20
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column2/color2/margin/column"]
+margin_right = 176.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="label" type="Label" parent="margin/row/column2/row2/column2/color2/margin/column/column"]
+margin_right = 86.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 32 )
+text = "History"
+
+[node name="label2" type="Label" parent="margin/row/column2/row2/column2/color2/margin/column/column"]
+margin_left = 90.0
+margin_right = 176.0
+margin_bottom = 26.0
+size_flags_horizontal = 3
+custom_colors/font_color = Color( 0.196078, 0.47451, 0.8, 1 )
+custom_fonts/font = SubResource( 32 )
+text = "See All"
+align = 2
+
+[node name="scroll" type="ScrollContainer" parent="margin/row/column2/row2/column2/color2/margin/column"]
+margin_top = 46.0
+margin_right = 176.0
+margin_bottom = 337.0
+size_flags_vertical = 3
+
+[node name="row" type="VBoxContainer" parent="margin/row/column2/row2/column2/color2/margin/column/scroll"]
+margin_right = 492.0
+margin_bottom = 210.0
+size_flags_horizontal = 3
+custom_constants/separation = 30
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="column" type="HBoxContainer" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row"]
+margin_right = 492.0
+margin_bottom = 30.0
+custom_constants/separation = 20
+
+[node name="icon" type="TextureRect" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column"]
+margin_right = 30.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 30, 30 )
+texture = ExtResource( 15 )
+expand = true
+stretch_mode = 6
+
+[node name="label" type="Label" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column"]
+margin_left = 50.0
+margin_top = 2.0
+margin_right = 281.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 33 )
+text = "1xgdkTjdiwEewhjiw......"
+
+[node name="label2" type="Label" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column"]
+margin_left = 301.0
+margin_top = 2.0
+margin_right = 365.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 0.152941, 0.682353, 0.376471, 1 )
+custom_fonts/font = SubResource( 33 )
+text = "+0.025"
+
+[node name="label3" type="Label" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column"]
+margin_left = 385.0
+margin_top = 2.0
+margin_right = 492.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 33 )
+text = "08/26/2018"
+
+[node name="column2" type="HBoxContainer" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row"]
+margin_top = 60.0
+margin_right = 492.0
+margin_bottom = 90.0
+custom_constants/separation = 20
+
+[node name="icon" type="TextureRect" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column2"]
+margin_right = 30.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 30, 30 )
+texture = ExtResource( 18 )
+expand = true
+stretch_mode = 6
+
+[node name="label" type="Label" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column2"]
+margin_left = 50.0
+margin_top = 2.0
+margin_right = 283.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 33 )
+text = "0dkhadpGHGJdknw......"
+
+[node name="label2" type="Label" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column2"]
+margin_left = 303.0
+margin_top = 2.0
+margin_right = 365.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 0.94902, 0.431373, 0.6, 1 )
+custom_fonts/font = SubResource( 33 )
+text = "-5.23%"
+
+[node name="label3" type="Label" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column2"]
+margin_left = 385.0
+margin_top = 2.0
+margin_right = 492.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 33 )
+text = "08/26/2018"
+
+[node name="column3" type="HBoxContainer" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row"]
+margin_top = 120.0
+margin_right = 492.0
+margin_bottom = 150.0
+custom_constants/separation = 20
+
+[node name="icon" type="TextureRect" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column3"]
+margin_right = 30.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 30, 30 )
+texture = ExtResource( 15 )
+expand = true
+stretch_mode = 6
+
+[node name="label" type="Label" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column3"]
+margin_left = 50.0
+margin_top = 2.0
+margin_right = 283.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 33 )
+text = "1xgdkTjdiwEewhjiw......"
+
+[node name="label2" type="Label" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column3"]
+margin_left = 303.0
+margin_top = 2.0
+margin_right = 365.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 0.94902, 0.431373, 0.6, 1 )
+custom_fonts/font = SubResource( 33 )
+text = "-5.23%"
+
+[node name="label3" type="Label" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column3"]
+margin_left = 385.0
+margin_top = 2.0
+margin_right = 492.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 33 )
+text = "08/26/2018"
+
+[node name="column4" type="HBoxContainer" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row"]
+margin_top = 180.0
+margin_right = 492.0
+margin_bottom = 210.0
+custom_constants/separation = 20
+
+[node name="icon" type="TextureRect" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column4"]
+margin_right = 30.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 30, 30 )
+texture = ExtResource( 18 )
+expand = true
+stretch_mode = 6
+
+[node name="label" type="Label" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column4"]
+margin_left = 50.0
+margin_top = 2.0
+margin_right = 281.0
+margin_bottom = 28.0
+size_flags_horizontal = 3
+custom_fonts/font = SubResource( 33 )
+text = "0dkhadpGHGJdknw......"
+
+[node name="label2" type="Label" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column4"]
+margin_left = 301.0
+margin_top = 2.0
+margin_right = 365.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 0.152941, 0.682353, 0.376471, 1 )
+custom_fonts/font = SubResource( 33 )
+text = "+0.025"
+
+[node name="label3" type="Label" parent="margin/row/column2/row2/column2/color2/margin/column/scroll/row/column4"]
+margin_left = 385.0
+margin_top = 2.0
+margin_right = 492.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 0.6 )
+custom_fonts/font = SubResource( 33 )
+text = "08/26/2018"

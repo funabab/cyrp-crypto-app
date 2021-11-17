@@ -1,0 +1,102 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://fonts/Montserrat/Montserrat-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://images/CRYP.svg" type="Texture" id=2]
+[ext_resource path="res://images/icon-search.svg" type="Texture" id=3]
+[ext_resource path="res://fonts/Montserrat/Montserrat-SemiBold.ttf" type="DynamicFontData" id=4]
+
+[sub_resource type="DynamicFont" id=2]
+size = 24
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 25
+font_data = ExtResource( 4 )
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0.654902, 0.964706, 1 )
+
+[node name="header" type="HBoxContainer"]
+margin_right = 1340.0
+margin_bottom = 70.0
+rect_min_size = Vector2( 0, 70 )
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="margin" type="Control" parent="."]
+margin_right = 310.0
+margin_bottom = 70.0
+rect_min_size = Vector2( 310, 0 )
+size_flags_vertical = 3
+
+[node name="logo" type="TextureRect" parent="margin"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 10.0
+margin_right = -50.0
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="column" type="HBoxContainer" parent="."]
+margin_left = 314.0
+margin_right = 1076.0
+margin_bottom = 70.0
+size_flags_horizontal = 3
+custom_constants/separation = 44
+
+[node name="Label" type="Label" parent="column"]
+margin_top = 19.0
+margin_right = 86.0
+margin_bottom = 50.0
+custom_fonts/font = SubResource( 2 )
+text = "Market"
+
+[node name="Label2" type="Label" parent="column"]
+margin_left = 130.0
+margin_top = 19.0
+margin_right = 199.0
+margin_bottom = 50.0
+custom_fonts/font = SubResource( 2 )
+text = "Trade"
+
+[node name="Label3" type="Label" parent="column"]
+margin_left = 243.0
+margin_top = 19.0
+margin_right = 386.0
+margin_bottom = 50.0
+custom_fonts/font = SubResource( 2 )
+text = "Community"
+
+[node name="Label4" type="Label" parent="column"]
+margin_left = 430.0
+margin_top = 19.0
+margin_right = 493.0
+margin_bottom = 50.0
+custom_fonts/font = SubResource( 2 )
+text = "More"
+
+[node name="icon" type="TextureRect" parent="column"]
+margin_left = 537.0
+margin_right = 562.0
+margin_bottom = 70.0
+rect_min_size = Vector2( 25, 25 )
+texture = ExtResource( 3 )
+expand = true
+stretch_mode = 4
+
+[node name="Button" type="Button" parent="."]
+margin_left = 1080.0
+margin_right = 1340.0
+margin_bottom = 70.0
+rect_min_size = Vector2( 260, 0 )
+size_flags_vertical = 3
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_fonts/font = SubResource( 3 )
+custom_styles/normal = SubResource( 1 )
+text = "1asnhHMshs ..."
