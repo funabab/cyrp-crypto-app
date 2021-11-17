@@ -27,9 +27,6 @@ func _get_values():
 	return _values
 	pass
 
-func _ready():
-	pass
-
 func _draw():
 	if (len(_values) == 0):
 		return
